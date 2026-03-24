@@ -6,796 +6,411 @@
     <title>Marsilino OS v14.0 | Memory Archive</title>
     <style>
         :root {
-            --bg: #061117;
-            --bg-soft: #0d1c23;
-            --card: rgba(9, 20, 26, 0.78);
-            --card-strong: rgba(10, 18, 23, 0.92);
-            --line: rgba(154, 231, 211, 0.16);
-            --accent: #87f1d6;
-            --accent-strong: #f4ce77;
-            --accent-warm: #ff9d84;
-            --text: #f3fbf8;
-            --muted: #9bb1ac;
-            --shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+            --bg-base: #030305;
+            --bg-surface: #0a0a0f;
+            --card: rgba(15, 15, 20, 0.6);
+            --card-hover: rgba(20, 20, 28, 0.9);
+            --accent: #00e5ff; 
+            --accent-strong: #b300ff; 
+            --text: #f4f4f5;
+            --muted: #a1a1aa;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(0, 229, 255, 0.5);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --glow: 0 0 20px rgba(0, 229, 255, 0.3);
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
         }
 
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        
         body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            font-family: var(--font-main);
             color: var(--text);
-            background:
-                radial-gradient(circle at top left, rgba(135, 241, 214, 0.18), transparent 28%),
-                radial-gradient(circle at 85% 8%, rgba(244, 206, 119, 0.16), transparent 22%),
-                linear-gradient(180deg, #071118 0%, #09161d 48%, #05090d 100%);
+            background-color: var(--bg-base);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 229, 255, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(179, 0, 255, 0.05), transparent 25%);
         }
 
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            pointer-events: none;
-            opacity: 0.28;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-            background-size: 74px 74px;
-            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent 88%);
+            z-index: -1;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+            mask-image: linear-gradient(to bottom, black 20%, transparent 80%);
+            -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 80%);
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        img {
-            display: block;
-            width: 100%;
-        }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        a { text-decoration: none; color: inherit; }
+        img { display: block; width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
 
-        .hero,
-        .metrics,
-        main,
-        footer {
-            width: min(1200px, calc(100% - 32px));
-            margin: 0 auto;
-        }
+        .container { width: min(1200px, calc(100% - 40px)); margin: 0 auto; }
 
-        .hero {
-            min-height: 100vh;
-            padding: 48px 0 34px;
-            display: grid;
-            grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
-            gap: 28px;
-            align-items: center;
+        /* --- HERO SECTION --- */
+        .hero { min-height: 90vh; padding: 80px 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 12px; font-family: var(--font-mono);
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--accent); background: rgba(0, 229, 255, 0.1); padding: 6px 16px;
+            border-radius: 4px; border: 1px solid rgba(0, 229, 255, 0.2);
         }
+        .hero-badge::before { content: ""; width: 8px; height: 8px; background-color: var(--accent); box-shadow: var(--glow); border-radius: 50%; }
 
-        .hero-copy {
-            padding: 18px 0;
-        }
-
-        .hero-badge,
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--accent);
-        }
-
-        .hero-badge::before,
-        .eyebrow::before {
-            content: "";
-            width: 12px;
-            height: 12px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-            box-shadow: 0 0 18px rgba(135, 241, 214, 0.7);
-        }
-
-        h1 {
-            margin: 18px 0 16px;
-            font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-            font-size: clamp(4rem, 14vw, 8rem);
-            line-height: 0.92;
-            letter-spacing: 0.04em;
-        }
-
-        h1 span {
-            color: var(--accent-strong);
-        }
-
-        .hero-copy p {
-            max-width: 34rem;
-            margin: 0;
-            color: var(--muted);
-            font-size: 1.08rem;
-            line-height: 1.75;
-        }
-
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            margin-top: 28px;
-        }
-
+        h1 { margin: 20px 0; font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; line-height: 1; letter-spacing: -0.03em; }
+        h1 span { background: linear-gradient(to right, var(--accent), var(--accent-strong)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .hero-copy p { color: var(--muted); font-size: 1.1rem; line-height: 1.6; max-width: 90%; margin-bottom: 30px; }
+        .hero-actions { display: flex; gap: 16px; margin-bottom: 40px; }
+        
         .button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 48px;
-            padding: 0 20px;
-            border-radius: 999px;
-            border: 1px solid transparent;
-            font-weight: 700;
-            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            padding: 14px 28px; font-family: var(--font-mono); font-size: 0.9rem; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 0.1em; border-radius: 4px; transition: all 0.3s ease; cursor: pointer;
         }
+        .button.primary { background: var(--accent); color: #000; box-shadow: var(--glow); }
+        .button.primary:hover { background: #fff; box-shadow: 0 0 30px rgba(255, 255, 255, 0.6); transform: translateY(-2px); }
+        .button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .button.secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        .button.primary {
-            color: #04110f;
-            background: linear-gradient(135deg, var(--accent), #b9ffe8);
-            box-shadow: 0 18px 40px rgba(135, 241, 214, 0.22);
+        .hero-stats { display: flex; gap: 20px; }
+        .stat-chip { border-left: 2px solid var(--accent); padding-left: 16px; }
+        .stat-chip strong { display: block; font-size: 1.5rem; font-weight: 800; color: #fff; }
+        .stat-chip span { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); text-transform: uppercase; }
+
+        .hero-collage { position: relative; height: 600px; }
+        .hero-main, .hero-side {
+            position: absolute; background: var(--bg-surface); padding: 8px;
+            border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); transition: transform 0.4s ease;
         }
+        .hero-main { width: 70%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; }
+        .hero-main:hover { transform: translate(-50%, -50%) scale(1.02); z-index: 10; border-color: var(--accent); }
+        .hero-side.top { width: 45%; top: 5%; right: 0; z-index: 1; filter: brightness(0.7); }
+        .hero-side.top:hover { filter: brightness(1); transform: scale(1.05); z-index: 10; border-color: var(--accent); }
+        .hero-side.bottom { width: 50%; bottom: 5%; left: 0; z-index: 3; filter: brightness(0.8); }
+        .hero-side.bottom:hover { filter: brightness(1); transform: scale(1.05); z-index: 10; border-color: var(--accent); }
 
-        .button.secondary {
-            border-color: var(--line);
-            background: rgba(7, 18, 24, 0.55);
-        }
+        .photo-shell { border-radius: 8px; overflow: hidden; aspect-ratio: 4/5; }
+        .hero-label { display: flex; justify-content: space-between; padding: 10px 4px 4px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); text-transform: uppercase; }
 
-        .button:hover {
-            transform: translateY(-2px);
-        }
+        /* --- METRICS & SECTIONS --- */
+        .metrics { margin: 40px auto 80px; }
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .metric { background: var(--card); backdrop-filter: blur(10px); border: 1px solid var(--border); padding: 24px; border-radius: 12px; transition: border-color 0.3s ease; }
+        .metric:hover { border-color: var(--accent-strong); }
+        .metric strong { display: block; font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 8px; }
+        .metric span { color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
 
-        .hero-stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            margin-top: 28px;
-        }
+        .section-card { margin-bottom: 60px; padding-top: 40px; border-top: 1px solid var(--border); }
+        .section-head { margin-bottom: 40px; }
+        .section-head h2 { font-size: 2.5rem; text-transform: uppercase; font-weight: 900; margin: 10px 0 16px; }
+        .section-head p { color: var(--muted); max-width: 600px; line-height: 1.6; }
 
-        .stat-chip {
-            min-width: 150px;
-            padding: 14px 16px;
-            border: 1px solid var(--line);
-            border-radius: 20px;
-            background: rgba(7, 18, 24, 0.5);
-            backdrop-filter: blur(12px);
-        }
-
-        .stat-chip strong {
-            display: block;
-            margin-bottom: 4px;
-            font-size: 1.25rem;
-            color: var(--accent-strong);
-        }
-
-        .stat-chip span {
-            color: var(--muted);
-            font-size: 0.94rem;
-        }
-
-        .hero-collage {
-            position: relative;
-            min-height: 660px;
-        }
-
-        .hero-main,
-        .hero-side {
-            position: absolute;
-            padding: 14px;
-            border: 1px solid var(--line);
-            border-radius: 28px;
-            background: var(--card);
-            backdrop-filter: blur(14px);
-            box-shadow: var(--shadow);
-        }
-
-        .hero-main {
-            inset: 78px 78px 18px 0;
-        }
-
-        .hero-side {
-            width: 42%;
-        }
-
-        .hero-side.top {
-            top: 0;
-            right: 0;
-            transform: rotate(4deg);
-        }
-
-        .hero-side.bottom {
-            right: 8px;
-            bottom: 68px;
-            transform: rotate(-4deg);
-        }
-
-        .photo-shell {
-            overflow: hidden;
-            border-radius: 22px;
-            background: #0d181d;
-        }
-
-        .hero-main img,
-        .hero-side img {
-            aspect-ratio: 4 / 5;
-            object-fit: cover;
-        }
-
-        .hero-label {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 14px 2px 2px;
-            font-size: 0.8rem;
-            color: var(--muted);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-
-        .metrics {
-            padding-bottom: 12px;
-        }
-
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 16px;
-        }
-
-        .metric {
-            padding: 20px 22px;
-            border-radius: 24px;
-            border: 1px solid var(--line);
-            background: rgba(8, 18, 24, 0.76);
-            box-shadow: var(--shadow);
-        }
-
-        .metric strong {
-            display: block;
-            margin-bottom: 8px;
-            font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-            font-size: 2.1rem;
-            letter-spacing: 0.04em;
-            color: var(--accent-strong);
-        }
-
-        .metric span {
-            color: var(--muted);
-        }
-
-        main {
-            padding-bottom: 72px;
-        }
-
-        .section-card {
-            margin-top: 28px;
-            padding: 28px;
-            border-radius: 32px;
-            border: 1px solid var(--line);
-            background: var(--card-strong);
-            box-shadow: var(--shadow);
-        }
-
-        .section-head {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            margin-bottom: 22px;
-        }
-
-        .section-head h2 {
-            margin: 10px 0 8px;
-            font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-            font-size: clamp(2rem, 5vw, 3.3rem);
-            line-height: 0.95;
-            letter-spacing: 0.04em;
-        }
-
-        .section-head p {
-            max-width: 36rem;
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(12, minmax(0, 1fr));
-            gap: 18px;
-        }
-
+        .photo-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
         .photo-card {
-            grid-column: span 4;
-            overflow: hidden;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
-            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            grid-column: span 4; background: var(--bg-surface); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column;
         }
+        .photo-card.feature { grid-column: span 6; }
+        .photo-card.wide { grid-column: span 8; }
 
-        .photo-card.feature {
-            grid-column: span 6;
-        }
+        .photo-card:hover { transform: translateY(-8px); border-color: var(--border-glow); box-shadow: var(--glow); background: var(--card-hover); }
+        .photo-card img { aspect-ratio: 4/5; transition: transform 0.5s ease; filter: grayscale(20%) contrast(1.1); }
+        .photo-card.feature img { aspect-ratio: 1/1; }
+        .photo-card.wide img { aspect-ratio: 16/9; }
+        .photo-card:hover img { transform: scale(1.05); filter: grayscale(0%) contrast(1); }
 
-        .photo-card.wide {
-            grid-column: span 8;
-        }
+        .photo-caption { padding: 20px; }
+        .photo-caption h3 { font-size: 1.1rem; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .photo-caption p { color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
 
-        .photo-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(135, 241, 214, 0.34);
-            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.28);
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
         }
+        #lightbox.active { opacity: 1; pointer-events: all; }
+        #lightbox img { max-width: 90%; max-height: 90vh; object-fit: contain; border-radius: 12px; box-shadow: 0 0 50px rgba(0,229,255,0.2); transform: scale(0.9); transition: transform 0.3s ease; }
+        #lightbox.active img { transform: scale(1); }
+        #lightbox-close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 2rem; cursor: pointer; font-family: var(--font-mono); }
 
-        .photo-card img {
-            aspect-ratio: 4 / 5;
-            object-fit: cover;
-        }
-
-        .photo-card.feature img {
-            aspect-ratio: 5 / 6;
-        }
-
-        .photo-card.wide img {
-            aspect-ratio: 16 / 10;
-        }
-
-        .photo-caption {
-            padding: 18px 18px 20px;
-        }
-
-        .photo-caption h3 {
-            margin: 0 0 8px;
-            font-size: 1.08rem;
-        }
-
-        .photo-caption p {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        footer {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            flex-wrap: wrap;
-            padding: 26px 0 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            color: #7d9391;
-            font-size: 0.92rem;
-        }
+        footer { display: flex; justify-content: space-between; padding: 40px 0; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin-top: 50px;}
+        code { color: var(--accent-strong); }
 
         @media (max-width: 980px) {
-            .hero {
-                min-height: auto;
-                padding-top: 34px;
-                grid-template-columns: 1fr;
-            }
-
-            .hero-collage {
-                min-height: auto;
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 18px;
-            }
-
-            .hero-main,
-            .hero-side {
-                position: static;
-                width: auto;
-                transform: none;
-            }
-
-            .hero-main {
-                grid-column: span 2;
-            }
-
-            .metric-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .photo-card,
-            .photo-card.feature,
-            .photo-card.wide {
-                grid-column: span 6;
-            }
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .hero-badge, .eyebrow { margin: 0 auto; }
+            .hero-actions, .hero-stats { justify-content: center; }
+            .hero-collage { height: 500px; margin-top: 40px; }
+            .photo-card, .photo-card.feature, .photo-card.wide { grid-column: span 6; }
         }
-
-        @media (max-width: 720px) {
-            .hero,
-            .metrics,
-            main,
-            footer {
-                width: min(1200px, calc(100% - 22px));
-            }
-
-            .hero-collage {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-main {
-                grid-column: auto;
-            }
-
-            .metric-grid,
-            .photo-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .photo-card,
-            .photo-card.feature,
-            .photo-card.wide {
-                grid-column: auto;
-            }
-
-            .section-card {
-                padding: 20px;
-            }
-
-            .hero-stats,
-            .hero-actions {
-                gap: 10px;
-            }
-
-            .button,
-            .stat-chip {
-                width: 100%;
-            }
+        @media (max-width: 600px) {
+            .hero-collage { height: 400px; }
+            .photo-card, .photo-card.feature, .photo-card.wide { grid-column: span 12; }
+            .metric-grid { grid-template-columns: 1fr; }
+            footer { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
 </head>
 <body>
-    <header class="hero">
+
+    <div id="lightbox">
+        <span id="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Expanded View">
+    </div>
+
+    <header class="hero container reveal">
         <div class="hero-copy">
-            <div class="hero-badge">Photo Archive Loaded</div>
-            <h1>MARSILINO <span>V14</span></h1>
+            <div class="hero-badge">System Boot Sequence Initiated</div>
+            <h1 id="typewriter">MARSILINO <span>V14</span></h1>
             <p>
                 Every stable release deserves the real photo archive. This build drops the stock images,
-                loads every local memory from the folder, and turns the whole page into a proper birthday gallery.
+                loads every local memory, and turns the whole page into a proper v14.0 birthday gallery.
             </p>
             <div class="hero-actions">
-                <a class="button primary" href="#archive">Open The Archive</a>
-                <a class="button secondary" href="#crew">Jump To Crew Mode</a>
+                <a class="button primary" href="#archive">Initialize Archive</a>
+                <a class="button secondary" href="#crew">Multiplayer Lobby</a>
             </div>
             <div class="hero-stats">
-                <div class="stat-chip">
-                    <strong>25</strong>
-                    <span>Local photos imported</span>
-                </div>
-                <div class="stat-chip">
-                    <strong>14</strong>
-                    <span>Years in production</span>
-                </div>
-                <div class="stat-chip">
-                    <strong>100%</strong>
-                    <span>Main character uptime</span>
-                </div>
+                <div class="stat-chip"><strong>25</strong><span>Total Assets</span></div>
+                <div class="stat-chip"><strong>14.0</strong><span>Current Level</span></div>
+                <div class="stat-chip"><strong>100%</strong><span>MC Energy</span></div>
             </div>
         </div>
 
         <div class="hero-collage">
             <figure class="hero-main">
-                <div class="photo-shell">
-                    <img src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (2).jpeg" alt="Portrait of Marsilino looking straight into the camera">
-                </div>
-                <figcaption class="hero-label">
-                    <span>Latest Stable Portrait</span>
-                    <span>Build 14.0</span>
-                </figcaption>
+                <div class="photo-shell"><img src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (2).jpeg" alt="Portrait"></div>
+                <figcaption class="hero-label"><span>Default Avatar</span><span>v14.0</span></figcaption>
             </figure>
-
             <figure class="hero-side top">
-                <div class="photo-shell">
-                    <img src="images/WhatsApp Image 2026-03-24 at 5.42.13 PM (1).jpeg" alt="Marsilino outdoors on a walking path with arms wide open">
-                </div>
-                <figcaption class="hero-label">
-                    <span>Adventure Pack</span>
-                    <span>Enabled</span>
-                </figcaption>
+                <div class="photo-shell"><img src="images/WhatsApp Image 2026-03-24 at 5.42.13 PM (1).jpeg" alt="Outdoors"></div>
+                <figcaption class="hero-label"><span>Outdoor Render</span><span>Active</span></figcaption>
             </figure>
-
             <figure class="hero-side bottom">
-                <div class="photo-shell">
-                    <img src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (3).jpeg" alt="Marsilino in an elevator mirror selfie with friends">
-                </div>
-                <figcaption class="hero-label">
-                    <span>Crew Sync</span>
-                    <span>Online</span>
-                </figcaption>
+                <div class="photo-shell"><img src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (3).jpeg" alt="Crew"></div>
+                <figcaption class="hero-label"><span>Lobby Sync</span><span>Online</span></figcaption>
             </figure>
         </div>
     </header>
 
-    <section class="metrics">
+    <section class="metrics container reveal">
         <div class="metric-grid">
-            <div class="metric">
-                <strong>5 Zones</strong>
-                <span>The gallery is split so each type of photo lands somewhere that makes sense.</span>
-            </div>
-            <div class="metric">
-                <strong>0 Stock Pics</strong>
-                <span>The placeholders are gone. Everything on the page now comes from the local archive.</span>
-            </div>
-            <div class="metric">
-                <strong>Full Mix</strong>
-                <span>Throwbacks, portraits, family shots, outside moments, and squad photos all made the cut.</span>
-            </div>
-            <div class="metric">
-                <strong>Mobile Ready</strong>
-                <span>The layout reshapes for phones so the tall portraits and wide shots still read cleanly.</span>
-            </div>
+            <div class="metric"><strong>4 Partitions</strong><span>Archive sorted into logical sectors. Legacy to Current.</span></div>
+            <div class="metric"><strong>Click to Zoom</strong><span>Lightbox protocol enabled. Click any asset to expand.</span></div>
+            <div class="metric"><strong>Full Mix</strong><span>Throwbacks, AFK logs, and squad screenshots compiled.</span></div>
+            <div class="metric"><strong>Mobile Ready</strong><span>UI scales to viewport. No rendering errors detected.</span></div>
         </div>
     </section>
 
-    <main id="archive">
-        <section class="section-card">
+    <main id="archive" class="container">
+        
+        <section class="section-card reveal">
             <div class="section-head">
-                <div>
-                    <div class="eyebrow">Throwback Firmware</div>
-                    <h2>THE EARLY PATCH NOTES</h2>
-                </div>
-                <p>Older shots, tiny-suit moments, and the kind of childhood photos that prove the main character energy shipped early.</p>
+                <div class="hero-badge" style="margin-bottom: 10px;">Legacy Build / Throwbacks</div>
+                <h2>The Early Patch Notes</h2>
+                <p>Older screenshots, prototype builds, and the kind of childhood logs that prove main character energy shipped early.</p>
             </div>
             <div class="photo-grid">
                 <figure class="photo-card feature">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.12 PM.jpeg" alt="Marsilino smiling in a yellow hoodie while holding a rabbit">
-                    <figcaption class="photo-caption">
-                        <h3>Bunny Side Quest</h3>
-                        <p>Prototype build already knew how to steal the frame.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.12 PM.jpeg" alt="Bunny">
+                    <figcaption class="photo-caption"><h3>Hardware Testing</h3><p>Successfully spawned a rabbit entity. Prototype build was flawless.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM (2).jpeg" alt="Young Marsilino standing in a shopping trolley in a supermarket">
-                    <figcaption class="photo-caption">
-                        <h3>Aisle Commander</h3>
-                        <p>Retail-era confidence levels were absurdly high from the start.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM (2).jpeg" alt="Trolley">
+                    <figcaption class="photo-caption"><h3>Inventory Beta</h3><p>Supermarket patrol. Note the red Fez—an elite, limited-edition cosmetic.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card wide">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.16 PM.jpeg" alt="Young Marsilino sitting in a chair inside a glassware shop">
-                    <figcaption class="photo-caption">
-                        <h3>Shop Manager Beta</h3>
-                        <p>Small boss energy, full inventory control, zero hesitation.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.16 PM.jpeg" alt="Shop">
+                    <figcaption class="photo-caption"><h3>Shopkeeper NPC</h3><p>Small boss energy. Guarding the glassware inventory with zero hesitation.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM (4).jpeg" alt="Young Marsilino in a suit standing in front of a Christmas tree">
-                    <figcaption class="photo-caption">
-                        <h3>Holiday Formalwear</h3>
-                        <p>Tiny suit, maximum seriousness, flawless execution.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM (4).jpeg" alt="Suit">
+                    <figcaption class="photo-caption"><h3>Holiday Update</h3><p>Tiny suit, hand in pocket, absolute maximum seriousness achieved.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM (3).jpeg" alt="Marsilino lying next to a younger child in bed">
-                    <figcaption class="photo-caption">
-                        <h3>Sibling Co-Op</h3>
-                        <p>Low-battery mode, shared with the little bro.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM (3).jpeg" alt="Bed">
+                    <figcaption class="photo-caption"><h3>Low Battery Mode</h3><p>Batman armor equipped, but currently running on 1% power with Player 2.</p></figcaption>
                 </figure>
             </div>
         </section>
 
-        <section class="section-card">
+        <section class="section-card reveal">
             <div class="section-head">
-                <div>
-                    <div class="eyebrow">Adventure Pack</div>
-                    <h2>OUTSIDE WORLD PATCHES</h2>
-                </div>
-                <p>The outdoor shots and away-from-home moments get their own zone, with layouts that give the scenery some room to breathe.</p>
+                <div class="hero-badge" style="margin-bottom: 10px;">Terrain Render / Adventure</div>
+                <h2>Outside World Patches</h2>
+                <p>Loading environmental assets. The graphics engine out here is pretty solid.</p>
             </div>
             <div class="photo-grid">
-                <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.13 PM (1).jpeg" alt="Marsilino posing on a walking path beside a grassy field">
-                    <figcaption class="photo-caption">
-                        <h3>Trail Update</h3>
-                        <p>Out in the wild like the camera crew had been booked weeks in advance.</p>
-                    </figcaption>
-                </figure>
-
                 <figure class="photo-card feature">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.14 PM (2).jpeg" alt="Marsilino sitting on a stone wall above the beach">
-                    <figcaption class="photo-caption">
-                        <h3>Seaside Patch</h3>
-                        <p>Coastline backdrop, no extra effort, still photogenic.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.14 PM (2).jpeg" alt="Beach">
+                    <figcaption class="photo-caption"><h3>Coastal Rendering Test</h3><p>Ocean backdrop loaded. Sitting on the boundary wall of the map.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM.jpeg" alt="Marsilino smiling while sitting on a display off-road buggy">
-                    <figcaption class="photo-caption">
-                        <h3>Test Drive Mode</h3>
-                        <p>Road presence arrived long before the driving licence.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM.jpeg" alt="Quad">
+                    <figcaption class="photo-caption"><h3>Mount Unlocked</h3><p>Road presence established long before the driving licence. Cyberquad equipped.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (4).jpeg" alt="Marsilino taking a low-angle selfie outside under a blue sky">
-                    <figcaption class="photo-caption">
-                        <h3>Sky Cam</h3>
-                        <p>Accidental masterpiece from the low-angle department.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (4).jpeg" alt="Sky">
+                    <figcaption class="photo-caption"><h3>Skybox Calibration</h3><p>Checking the upper limits of the map. The blue rendering is working.</p></figcaption>
+                </figure>
+                <figure class="photo-card wide">
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM.jpeg" alt="Duo Outdoor">
+                    <figcaption class="photo-caption"><h3>Co-Op Exploration</h3><p>Running the outdoor server with squad members. High visibility.</p></figcaption>
                 </figure>
             </div>
         </section>
 
-        <section class="section-card">
+        <section class="section-card reveal">
             <div class="section-head">
-                <div>
-                    <div class="eyebrow">Ceremony Mode</div>
-                    <h2>FORMAL BUILD ONLINE</h2>
-                </div>
-                <p>The dressier and family-heavy photos sit together so the page feels like an actual story instead of a random camera roll dump.</p>
+                <div class="hero-badge" style="margin-bottom: 10px;">Formal Protocol / Events</div>
+                <h2>Holy Buffs & Safe Zones</h2>
+                <p>The dressier moments. When the server requires formal skins and perfect behavior.</p>
             </div>
             <div class="photo-grid">
                 <figure class="photo-card wide">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.14 PM.jpeg" alt="Marsilino in ceremonial clothing inside a church">
-                    <figcaption class="photo-caption">
-                        <h3>Altar Duty</h3>
-                        <p>Locked in, properly dressed, and taking the serious build for a spin.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.14 PM.jpeg" alt="Church">
+                    <figcaption class="photo-caption"><h3>Holy Buff Activated</h3><p>White robes equipped, candle lit, running the sacred protocols flawlessly.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card feature">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (6).jpeg" alt="Marsilino with family near desserts on a table">
-                    <figcaption class="photo-caption">
-                        <h3>Dessert Council</h3>
-                        <p>Family meeting activated the second cake came into view.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (6).jpeg" alt="Cake">
+                    <figcaption class="photo-caption"><h3>Raid Boss Defeated</h3><p>The loot drop: A massive chocolate cake. Even the Bishop approves of the stats.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.17 PM (1).jpeg" alt="Marsilino sitting beside another child during a formal gathering">
-                    <figcaption class="photo-caption">
-                        <h3>Side Quest Company</h3>
-                        <p>One seated on the throne, one covering the lower level.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.17 PM.jpeg" alt="Tray">
+                    <figcaption class="photo-caption"><h3>Escort Mission</h3><p>Important delivery accepted and handled like an absolute veteran.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.17 PM (2).jpeg" alt="Marsilino sitting on the floor using a phone while dressed smartly">
-                    <figcaption class="photo-caption">
-                        <h3>Floor HQ</h3>
-                        <p>Formal event on top, mobile priorities underneath.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.17 PM (2).jpeg" alt="Phone on floor">
+                    <figcaption class="photo-caption"><h3>AFK in Safe Zone</h3><p>Formal event on top, mobile gaming priorities underneath on the red carpet.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.17 PM.jpeg" alt="Marsilino holding a tray during a ceremony">
-                    <figcaption class="photo-caption">
-                        <h3>Trusted With Cargo</h3>
-                        <p>Important delivery accepted and handled like a veteran.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.17 PM (1).jpeg" alt="Leaning">
+                    <figcaption class="photo-caption"><h3>Support Pillar Duty</h3><p>Sometimes the younger players just need to lean on the veteran for stability.</p></figcaption>
                 </figure>
             </div>
         </section>
 
-        <section class="section-card">
+        <section class="section-card reveal">
             <div class="section-head">
-                <div>
-                    <div class="eyebrow">Main Character Energy</div>
-                    <h2>PORTRAITS, REACTIONS, CHAOS</h2>
-                </div>
-                <p>This is the biggest section because most of the folder lives here: portraits, funny expressions, quiet moments, and the clearly camera-aware shots.</p>
+                <div class="hero-badge" style="margin-bottom: 10px;">Main Character Energy</div>
+                <h2>Glitches, AFK, & Chaos</h2>
+                <p>Portraits, weird camera angles, and moments where the simulation glitched out perfectly.</p>
             </div>
             <div class="photo-grid">
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.13 PM.jpeg" alt="Side profile portrait of Marsilino looking forward">
-                    <figcaption class="photo-caption">
-                        <h3>Side Profile Render</h3>
-                        <p>Clean lines, full confidence, zero notes.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.13 PM.jpeg" alt="Profile">
+                    <figcaption class="photo-caption"><h3>Ray-Tracing: ON</h3><p>Clean lines, high-res profile shot. Graphics engine pushing limits.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.14 PM (1).jpeg" alt="Marsilino looking surprised in a tracksuit">
-                    <figcaption class="photo-caption">
-                        <h3>Surprise Detection</h3>
-                        <p>The expression says the next joke just landed.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.14 PM (1).jpeg" alt="Surprise">
+                    <figcaption class="photo-caption"><h3>Lag Spike Detected</h3><p>The exact frame where the ping hit 999ms and the server paused.</p></figcaption>
                 </figure>
-
-                <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM (1).jpeg" alt="Marsilino smiling and giving a double thumbs up">
-                    <figcaption class="photo-caption">
-                        <h3>Approval System</h3>
-                        <p>Two thumbs up and somehow still extra dramatic.</p>
-                    </figcaption>
-                </figure>
-
-                <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.16 PM (1).jpeg" alt="Marsilino standing indoors in a blue shirt and glasses">
-                    <figcaption class="photo-caption">
-                        <h3>Everyday Build</h3>
-                        <p>Default fit, solid stance, no patch needed.</p>
-                    </figcaption>
-                </figure>
-
                 <figure class="photo-card feature">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.16 PM (2).jpeg" alt="Marsilino bundled in a large coat with glasses and eyes closed">
-                    <figcaption class="photo-caption">
-                        <h3>Energy Saver Mode</h3>
-                        <p>Battery dropped below one percent and the coat became a charging dock.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.16 PM (2).jpeg" alt="Sleeping">
+                    <figcaption class="photo-caption"><h3>Hibernation Protocol</h3><p>Zipped to the chin. The jacket became a sleeping bag. Powering down.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (1).jpeg" alt="Marsilino wearing glasses and a fake moustache filter in a restaurant">
-                    <figcaption class="photo-caption">
-                        <h3>Filter Experiment</h3>
-                        <p>The fake moustache build should never have worked this well.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.15 PM (1).jpeg" alt="Bow">
+                    <figcaption class="photo-caption"><h3>Legendary Headgear</h3><p>Double thumbs up, massive smile, and a blue hair bow. Perfect loadout.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (5).jpeg" alt="Marsilino sitting at a table and looking at a phone">
-                    <figcaption class="photo-caption">
-                        <h3>Focus Mode</h3>
-                        <p>Phone in hand, whole room ignored.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (1).jpeg" alt="Moustache">
+                    <figcaption class="photo-caption"><h3>Disguise Mechanic</h3><p>The filter glitch in the restaurant. Stealth mode activated.</p></figcaption>
                 </figure>
-
                 <figure class="photo-card">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (7).jpeg" alt="Close selfie of Marsilino indoors">
-                    <figcaption class="photo-caption">
-                        <h3>Close-Up Update</h3>
-                        <p>Camera pushed too close, confidence stayed exactly the same.</p>
-                    </figcaption>
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (5).jpeg" alt="Pub Phone">
+                    <figcaption class="photo-caption"><h3>Uplink Established</h3><p>Tunnel vision active. The entire surrounding restaurant is being ignored.</p></figcaption>
+                </figure>
+                <figure class="photo-card">
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (7).jpeg" alt="Close Up">
+                    <figcaption class="photo-caption"><h3>Front Camera Glitch</h3><p>FOV slider set way too close, but confidence remains unbothered.</p></figcaption>
+                </figure>
+                <figure class="photo-card">
+                    <img loading="lazy" src="images/WhatsApp Image 2026-03-24 at 5.42.16 PM (1).jpeg" alt="Standing">
+                    <figcaption class="photo-caption"><h3>Default Skin Equipped</h3><p>Standard McKenzie loadout. Ready for the next objective.</p></figcaption>
                 </figure>
             </div>
         </section>
 
-        <section class="section-card" id="crew">
-            <div class="section-head">
-                <div>
-                    <div class="eyebrow">Crew Sync</div>
-                    <h2>FRIENDS, FAMILY, BACKUP</h2>
-                </div>
-                <p>The remaining shots lean into the social side of the archive, so the page ends with the group energy instead of just solo portraits.</p>
-            </div>
-            <div class="photo-grid">
-                <figure class="photo-card feature">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM (3).jpeg" alt="Marsilino and friends posing in an elevator mirror selfie">
-                    <figcaption class="photo-caption">
-                        <h3>Elevator Sync</h3>
-                        <p>The squad rolled in like a limited edition event drop.</p>
-                    </figcaption>
-                </figure>
-
-                <figure class="photo-card feature">
-                    <img loading="lazy" decoding="async" src="images/WhatsApp Image 2026-03-24 at 5.42.18 PM.jpeg" alt="Marsilino taking a selfie with another child outdoors">
-                    <figcaption class="photo-caption">
-                        <h3>Duo Mode</h3>
-                        <p>Co-op session active and running at full volume.</p>
-                    </figcaption>
-                </figure>
-            </div>
-        </section>
     </main>
 
-    <footer>
-        <span>Marsilino OS v14.0 now runs entirely on local memories.</span>
-        <span>All images loaded from the <code>images</code> folder in this project.</span>
+    <footer class="container reveal">
+        <span>Marsilino OS v14.0 // Running natively on local core.</span>
+        <span>Assets loaded from <code>/images/</code> directory.</span>
     </footer>
+
+    <script>
+        // 1. Lightbox Interactivity
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.getElementById('lightbox-close');
+        const images = document.querySelectorAll('.photo-card img, .photo-shell img');
+
+        images.forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightbox.classList.add('active');
+            });
+        });
+
+        const closeLightbox = () => lightbox.classList.remove('active');
+        closeBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg) closeLightbox();
+        });
+
+        // 2. Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => revealOnScroll.observe(el));
+
+        // 3. Simple Typewriter Effect on Load
+        window.onload = () => {
+            const title = document.getElementById('typewriter');
+            const originalHTML = title.innerHTML;
+            const text = "MARSILINO ";
+            title.innerHTML = "";
+            let i = 0;
+            
+            function typeWriter() {
+                if (i < text.length) {
+                    title.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    title.innerHTML = originalHTML; // Restore the styled span
+                }
+            }
+            setTimeout(typeWriter, 500);
+        };
+    </script>
 </body>
 </html>
