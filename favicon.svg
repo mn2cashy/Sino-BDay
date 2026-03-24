@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Marsilino V14 favicon">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#07151d"/>
+      <stop offset="1" stop-color="#16091f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="14" y1="12" x2="53" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00e5ff"/>
+      <stop offset="1" stop-color="#b300ff"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect x="4" y="4" width="56" height="56" rx="18" fill="url(#bg)" stroke="url(#accent)" stroke-width="2.5"/>
+  <circle cx="16" cy="15" r="8" fill="#00e5ff" opacity="0.18"/>
+  <circle cx="50" cy="49" r="10" fill="#b300ff" opacity="0.15"/>
+
+  <path
+    d="M18 45V18l14 16 14-16v27"
+    fill="none"
+    stroke="url(#accent)"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    filter="url(#glow)"
+  />
+
+  <path
+    d="M18 45V18l14 16 14-16v27"
+    fill="none"
+    stroke="#f7fbff"
+    stroke-width="2.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <rect x="33" y="35" width="19" height="13" rx="6.5" fill="#071016" stroke="url(#accent)" stroke-width="1.7"/>
+  <text
+    x="42.5"
+    y="43.6"
+    text-anchor="middle"
+    font-family="Trebuchet MS, Segoe UI, sans-serif"
+    font-size="8"
+    font-weight="700"
+    fill="#f7fbff"
+  >14</text>
+</svg>
